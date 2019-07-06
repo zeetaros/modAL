@@ -8,6 +8,7 @@ from keras.regularizers import l2
 from keras.wrappers.scikit_learn import KerasClassifier
 from modAL.models import ActiveLearner
 
+
 def create_keras_model():
     model = Sequential()
     model.add(Conv2D(32, (4, 4), activation='relu'))
