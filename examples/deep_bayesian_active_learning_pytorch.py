@@ -9,7 +9,7 @@ from torchvision.datasets import MNIST
 from skorch import NeuralNetClassifier
 
 from modAL import ActiveLearner
-from modAL.bayesianDL import max_entropy_pytorch
+from modAL.bayesianDL import max_entropy
 
 
 class SimpleClassifier(nn.Module):
@@ -57,7 +57,7 @@ if __name__ == '__main__':
                                 criterion=nn.CrossEntropyLoss,
                                 device=device)
 
-    learner = ActiveLearner(estimator=model, query_strategy=max_entropy_pytorch,
+    learner = ActiveLearner(estimator=model, query_strategy=max_entropy,
                             X_training=X_train, y_training=y_train)
 
     X_pool = np.vstack((mnist[0][0][None, :] for i in range(100)))

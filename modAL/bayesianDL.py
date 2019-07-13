@@ -11,8 +11,8 @@ from modAL.utils.selection import multi_argmax
 EPSILON = 1e-32
 
 
-def max_entropy_pytorch(learner: ActiveLearner, X: modALinput, n_instances: int = 1, n_samples: int = 100,
-                        n_subsamples: Union[bool, int] = False):
+def max_entropy(learner: ActiveLearner, X: modALinput, n_instances: int = 1, n_samples: int = 100,
+                n_subsamples: Union[bool, int] = False):
     if n_subsamples:
         X = np.random.choice(X.shape[0], n_subsamples, replace=False)
 
