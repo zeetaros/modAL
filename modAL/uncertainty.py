@@ -215,3 +215,29 @@ def entropy_sampling(classifier: BaseEstimator, X: modALinput,
         query_idx = shuffled_argmax(entropy, n_instances=n_instances)
 
     return query_idx, X[query_idx]
+
+def boundary_uncertainty(classifier: BaseEstimator, X: modALinput, score_threshold, normalize=True, **predict_proba_kwargs) -> np.ndarray:
+    """
+    Measure the uncertainty of the classifier in making decision around the score/probability threshold.
+
+    Args:
+        classifier: The probabilistic classifier or binary model for which the uncertainty is to be measured. 
+        X: The samples for which the uncertainty of classification is to be measured.
+        score_threshold: The threshold that sets the boundary for the binary classification.
+        normalize: Whether to normalize the uncertainty within the given sample set.
+        **predict_proba_kwargs: Keyword arguments to be passed for the :meth:`predict_proba` of the classifier.
+
+    Returns:
+        Classifier uncertainty, which is based on how close the predicted scores to the decision boundary.
+    """
+    # calculate uncertainty for each point provided
+    try:
+        scores = classifier.predict_proba(X, **predict_proba_kwargs)[:, 1]
+    except NotFittedError:
+        return np.ones(shape=(X.shape[0], ))
+
+    # for each point, calculate the reciprocal of the distance between the point and the score threshold
+    uncertainty =  [1 / (1 + abs(score_threshold - score)) for score in scores]
+    if normalize:
+        return [(u - min(uncertainty)) / (max(uncertainty) - min(uncertainty)) for u in uncertainty]
+    return uncertainty
